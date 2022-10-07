@@ -1,0 +1,45 @@
+---
+title: "Decomposition - Data Analysis Assignment"
+author: "Tarun Kaushik"
+date: "2022-10-07"
+output: html_document
+---
+
+```{r}
+library(fpp)
+library(fpp2)
+
+#Printing head of the data to understand the layout
+head(AirPassengers)
+
+#Plot the data
+plot(AirPassengers)
+
+#Segregating seasonal, trend and remainder component from the time series. As we can see seasonal component is additive since magnitude of this component is fairly constant.
+stl_decomp <- stl(AirPassengers,s.window ="periodic")
+plot(stl_decomp)
+attributes(stl_decomp)
+
+# Lets print out a seasonal adjustment. These values shows how the data would look if we adjust the seasonal component.
+seasadj(stl_decomp)
+
+# Plot a line on the graph. We can see plot for seasonally adjusted data vs original data.
+plot(AirPassengers)
+lines(seasadj(stl_decomp), col="Red")
+
+# Default period forecast. Forecasting with seasonally adjusted data. Not usually recommended
+f_stl <- forecast(stl_decomp)
+
+# you can pass the # of period. Next 15 data points are forecasted and plotted
+f_stl <- forecast(stl_decomp,h=15)
+f_stl
+plot(f_stl)
+
+# There is more than one way to do things
+decomp_elec <- decompose(AirPassengers)
+
+# Each one shows different attributes 
+attributes(decomp_elec)
+seasadj(decomp_elec)
+
+```
